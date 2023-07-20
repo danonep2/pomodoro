@@ -48,14 +48,17 @@ function Pomodoro(props: Props): JSX.Element {
       setTime(props.timeWorking);
       setCount(false);
       setWorking(false);
-      setTotalTime(-1);
+      setTotalTime(0);
     }
   };
 
   useEffect(() => {
-    if (working) {
+    if (working && count) {
       document.body.classList.add("working");
       document.getElementsByClassName("status")[0].innerHTML = "Trabalhando";
+    } else if (totalTime === 0) {
+      document.body.classList.remove("working");
+      document.getElementsByClassName("status")[0].innerHTML = "Iniciando";
     } else {
       document.body.classList.remove("working");
       document.getElementsByClassName("status")[0].innerHTML = "Descancando";
@@ -91,7 +94,7 @@ function Pomodoro(props: Props): JSX.Element {
   return (
     <div className="pomodoro">
       <h1>
-        Você está: <span className="status">Em pausa</span>
+        Você está: <span className="status">Iniciando</span>
       </h1>
       <Timer
         time={time}
