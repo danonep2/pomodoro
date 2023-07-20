@@ -1,0 +1,54 @@
+*{
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+body{
+  background-color: dodgerblue;
+  transition: background-color .3s;
+  text-align: center;
+}
+.hiden{
+  display: none;
+}
+
+.working,
+.working .pomodoro .controler Button{
+  background-color: crimson;
+}
+.app{
+  padding: 0 25px;
+}
+.pomodoro{
+  background-color: white;
+  margin: 25px auto;
+  max-width: 650px;
+  padding: 15px 40px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px black;
+}
+.pomodoro h1{
+  margin: 15px;
+}
+.pomodoro .timer{
+  font-size: 5rem;
+  text-align: center;
+}
+.pomodoro .controler{
+  display: flex;
+  text-align: center;
+  justify-content: space-evenly;
+}
+
+.pomodoro .controler Button{
+  margin: 20px 0;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: white;
+  background-color: dodgerblue;
+  border-radius: 3px;
+}
+ .pomodoro .details{
+  text-align: start;
+ }
