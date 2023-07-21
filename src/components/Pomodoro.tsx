@@ -18,7 +18,6 @@ interface Props {
   timeWorking: number;
   pauseTime: number;
   longPause: number;
-  clycle: number;
 }
 
 let pauseCount = 0;
