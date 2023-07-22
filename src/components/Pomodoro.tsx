@@ -60,7 +60,7 @@ function Pomodoro(props: Props): JSX.Element {
       document.getElementsByClassName("status")[0].innerHTML = "Iniciando";
     } else {
       document.body.classList.remove("working");
-      document.getElementsByClassName("status")[0].innerHTML = "Descancando";
+      document.getElementsByClassName("status")[0].innerHTML = "Descansando";
     }
   }, [working]);
 
