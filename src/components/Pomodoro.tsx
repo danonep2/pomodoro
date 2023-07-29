@@ -1,127 +1,145 @@
-import React, { useState, useEffect } from "react";
-import Timer from "./Timer";
-import Button from "./Button";
-import secondsToTime from "../utils/seconds-to-time";
+import React, { useEffect, useState } from "react";
+import { secondsToTime } from "../utils/Time";
+import { Button, Timer } from "../components";
+import StartSound from "../assets/sounds/start.mp3";
+import FinishSound from "../assets/sounds/finish.mp3";
+import Pauseound from "../assets/sounds/pause.mp3";
+import { PomodoroStatus } from "../@types/enums";
+import { usePomodoro } from "../hooks/usePomodoro";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const start = require("../sounds/start.mp3");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const finish = require("../sounds/finish.mp3");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const pause = require("../sounds/pause.mp3");
+const audioStart = new Audio(StartSound);
+const audioFinish = new Audio(FinishSound);
+const audioPause = new Audio(Pauseound);
 
-const audioStart = new Audio(start);
-const audioFinish = new Audio(finish);
-const audioPause = new Audio(pause);
+// memoização
+// useMemo, useCallback, memo
 
-interface Props {
-  timeWorking: number;
-  pauseTime: number;
-  longPause: number;
+interface PomodoroProps {
+  timeWorkingInSecs: number;
+  pauseTimeInSecs: number;
 }
 
-let pauseCount = 0;
+const Pomodoro: React.FC<PomodoroProps> = (props) => {
+  const { pauseTimeInSecs, timeWorkingInSecs } = props;
 
-function Pomodoro(props: Props): JSX.Element {
-  const [time, setTime] = useState(props.timeWorking);
-  const [count, setCount] = useState(false);
-  const [working, setWorking] = useState(false);
+  const [time, setTime] = useState(timeWorkingInSecs);
+  const [status, setStatus] = useState<PomodoroStatus>(
+    PomodoroStatus.Iniciando
+  );
+  const [pauseCount, setPauseCount] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isWorking, setIsWorking] = useState(false);
+
   const [cycle, setCycle] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
 
+  const { elapsedTime, timeLeft } = usePomodoro();
+
   const startPodomoro = () => {
-    if (!count) {
-      setWorking(true);
-      setCount(true);
+    if (!isPaused) {
+      setIsWorking(true);
+      setIsPaused(true);
       audioStart.play();
     }
   };
 
   const pausePodomoro = () => {
-    setCount(false);
+    setIsPaused(false);
     audioPause.play();
   };
 
   const resetPomodoro = () => {
     if (totalTime >= 1) {
-      setTime(props.timeWorking);
-      setCount(false);
-      setWorking(false);
+      setTime(timeWorkingInSecs);
+      setIsPaused(false);
+      setIsWorking(false);
       setTotalTime(0);
     }
   };
 
+  // early return
+  // context api
   useEffect(() => {
-    if (working && count) {
+    if (isWorking && isPaused) {
       document.body.classList.add("working");
-      document.getElementsByClassName("status")[0].innerHTML = "Trabalhando";
-    } else if (totalTime === 0) {
-      document.body.classList.remove("working");
-      document.getElementsByClassName("status")[0].innerHTML = "Iniciando";
-    } else {
-      document.body.classList.remove("working");
-      document.getElementsByClassName("status")[0].innerHTML = "Descansando";
+      setStatus(PomodoroStatus.Trabalhando);
+      return;
     }
-  }, [working]);
+
+    if (totalTime === 0) {
+      document.body.classList.remove("working");
+      setStatus(PomodoroStatus.Iniciando);
+      return;
+    }
+
+    document.body.classList.remove("working");
+    setStatus(PomodoroStatus.Descansando);
+  }, [isWorking]);
 
   useEffect(() => {
-    if (time === -1) {
-      audioFinish.play();
-      if (working) {
-        pauseCount++;
-        const newTime = props.pauseTime;
-        if (pauseCount % 4 === 0) {
-          setCycle(cycle + 1);
-        }
-        setTime(newTime);
-      } else {
-        setTime(props.timeWorking);
-      }
-      setWorking(!working);
+    if (time >= 0) {
+      return;
     }
+
+    audioFinish.play();
+
+    if (isWorking) {
+      setPauseCount((pS) => pS + 1);
+
+      if (pauseCount % 4 === 0) {
+        setCycle(cycle + 1);
+      }
+
+      setTime(pauseTimeInSecs);
+    } else {
+      setTime(timeWorkingInSecs);
+    }
+
+    setIsWorking(!isWorking);
   }, [
     setCycle,
     setTime,
     setTotalTime,
     time,
     cycle,
-    working,
-    props.pauseTime,
-    props.timeWorking,
+    isWorking,
+    pauseTimeInSecs,
+    timeWorkingInSecs,
   ]);
 
   return (
     <div className="pomodoro">
       <h1>
-        Você está: <span className="status">Iniciando</span>
+        Você está: <span>{status}</span>
       </h1>
       <Timer
         time={time}
         setTime={setTime}
-        inWorking={count}
+        inWorking={isPaused}
         setTotalTime={setTotalTime}
         totalTime={totalTime}
-      ></Timer>
+      />
 
       <div className="controler">
         <Button
           text={"Iniciar"}
           className={"Start"}
           callback={() => startPodomoro()}
-        ></Button>
+        />
 
         <Button
           text="Pausar"
           className={totalTime < 1 ? "hidden" : ""}
           callback={() => pausePodomoro()}
-        ></Button>
+        />
 
         <Button
           text="Reinciar"
           className="reset"
           callback={() => resetPomodoro()}
-        ></Button>
+        />
       </div>
+
       <div className="details">
         <strong>Detalhes:</strong>
         <p>Ciclos: {cycle}</p>
@@ -130,6 +148,6 @@ function Pomodoro(props: Props): JSX.Element {
       </div>
     </div>
   );
-}
+};
 
-export default Pomodoro;
+export { Pomodoro };

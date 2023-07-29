@@ -14,4 +14,4 @@ function Button(props: Props): JSX.Element {
   );
 }
 
-export default Button;
+export { Button };

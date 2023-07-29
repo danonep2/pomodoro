@@ -1,10 +1,10 @@
 import React from "react";
-import Pomodoro from "./components/Pomodoro";
+import { Pomodoro } from "./components";
 
 function App(): JSX.Element {
   return (
     <div className="App">
-      <Pomodoro timeWorking={1500} pauseTime={300} longPause={900} />
+      <Pomodoro timeWorkingInSecs={1500} pauseTimeInSecs={300} />
     </div>
   );
 }
