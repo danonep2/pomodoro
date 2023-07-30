@@ -25,4 +25,4 @@ function useInterval<T extends CallableFunction>(
   }, [delay]);
 }
 
-export default useInterval;
+export { useInterval };

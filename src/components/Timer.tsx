@@ -1,24 +1,13 @@
-import useInterval from "../hooks/use-interval";
 import React from "react";
-import secondsToMinutes from "../utils/seconds-to-minutes";
+import { secondsToMinutes } from "../utils/Time";
 
-interface Props {
+interface TimeProps {
   time: number;
-  totalTime: number;
-  inWorking: boolean;
-  setTime: CallableFunction;
-  setTotalTime: CallableFunction;
 }
 
-function Timer(props: Props): JSX.Element {
-  useInterval(
-    () => {
-      props.setTotalTime(props.totalTime + 1);
-      props.setTime(props.time - 1);
-    },
-    props.inWorking ? 1000 : null
-  );
-  return <div className="timer">{secondsToMinutes(props.time)}</div>;
-}
+const Timer: React.FC<TimeProps> = (props) => {
+  const { time } = props;
+  return <div className="timer">{secondsToMinutes(time)}</div>;
+};
 
-export default Timer;
+export { Timer };

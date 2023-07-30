@@ -1,17 +1,19 @@
 import React from "react";
 
-interface Props {
+interface ButtonProps {
   text: string;
   callback: () => void;
   className: string;
 }
 
-function Button(props: Props): JSX.Element {
+const Button: React.FC<ButtonProps> = (props) => {
+  const { callback, className, text } = props;
+
   return (
-    <button onClick={props.callback} className={props.className}>
-      {props.text}
+    <button onClick={callback} className={className}>
+      {text}
     </button>
   );
-}
+};
 
-export default Button;
+export { Button };
