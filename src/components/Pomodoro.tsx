@@ -22,23 +22,11 @@ const Pomodoro: React.FC = () => {
       <Timer time={leftTime} />
 
       <div className="controler">
-        <Button
-          text={"Iniciar"}
-          className={"start"}
-          callback={() => startPomodoro()}
-        />
+        <Button text="Iniciar" callback={() => startPomodoro()} />
 
-        <Button
-          text="Pausar"
-          className={"pause"}
-          callback={() => pausePomodoro()}
-        />
+        <Button text="Pausar" callback={() => pausePomodoro()} />
 
-        <Button
-          text="Reinciar"
-          className={"reset"}
-          callback={() => resetPomodoro()}
-        />
+        <Button text="Reinciar" callback={() => resetPomodoro()} />
       </div>
       <div className="details">
         <strong>Detalhes:</strong>

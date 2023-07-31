@@ -3,17 +3,12 @@ import React from "react";
 interface ButtonProps {
   text: string;
   callback: () => void;
-  className: string;
 }
 
 const Button: React.FC<ButtonProps> = (props) => {
-  const { callback, className, text } = props;
+  const { callback, text } = props;
 
-  return (
-    <button onClick={callback} className={className}>
-      {text}
-    </button>
-  );
+  return <button onClick={callback}>{text}</button>;
 };
 
 export { Button };
